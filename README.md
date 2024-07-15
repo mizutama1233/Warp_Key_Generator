@@ -1,4 +1,4 @@
-# Warp_Key_Generator
+# Warp+ Key Generator
 Warp+ Key Generator. 1.92EB data (1923837108 GB)
 [English Markdown](https://github.com/mizutama1233/Warp_Key_Generator/blob/main/README_eng.md)
 

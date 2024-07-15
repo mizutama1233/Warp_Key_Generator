@@ -14,5 +14,7 @@ Warp+ Key Generator. 1.92EB data (1923837108 GB)
 - [ ] プロキシの追加（429バイパス）
 - [ ] もっと見やすく！！
 
+俺の技術力無いのバレてて笑えない
+
 # サポートはこちら
 https://discord.gg/tokky

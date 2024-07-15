@@ -2,7 +2,7 @@
 Warp+ Key Generator. 1.92EB data (1923837108 GB)
 [English Markdown](https://github.com/mizutama1233/Warp_Key_Generator/blob/main/README_eng.md)
 
-普通はKeys.txtに追加されます。"積み立て~~"は絶対消さないでください
+普通はKeys.txtに追加されます。"積み立て~~"は絶対消さないでくださいw
 
 # 使い方
 1. Pythonをインストール

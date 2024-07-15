@@ -11,7 +11,7 @@ It is usually added to Keys.txt. Never delete "積み立てwarp.txt" file!!
 5. `py main.py`
 
 # Todo:
-- [x] 429 Bypass
+- [ ] 429 Bypass
 - [ ] More visible!
 
 # Need support? (Japanese server)

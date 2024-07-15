@@ -1,6 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import random, time, datetime
-import httpx
+import requests
 
 tpe = ThreadPoolExecutor(max_workers=5)
 
@@ -9,7 +9,7 @@ def get_headers(token):
         "Authorization": f"Bearer {token}"
     }
 
-def generate(diff, today = None):
+def generate(diff, today=None):
     print(f"[!] 生成中")
     try:
         headers = {
@@ -20,14 +20,15 @@ def generate(diff, today = None):
             "User-Agent": "okhttp/3.12.1",
         }
 
-        with httpx.Client(base_url="https://api.cloudflareclient.com/v0a2223", headers=headers, timeout=35) as client:
-            r = client.post("/reg")
+        with requests.Session() as client:
+            client.headers.update(headers)
+            r = client.post("https://api.cloudflareclient.com/v0a2223/reg", timeout=35)
             response_data = r.json()
             id = response_data["id"]
             klych = response_data["account"]["license"]
             token = response_data["token"]
 
-            r = client.post("/reg")
+            r = client.post("https://api.cloudflareclient.com/v0a2223/reg", timeout=35)
             response_data2 = r.json()
             id2 = response_data2["id"]
             token2 = response_data2["token"]
@@ -37,24 +38,24 @@ def generate(diff, today = None):
                 "Authorization": f"Bearer {token}"
             }
 
-            json = {"referrer": f"{id2}"}
-            client.patch(f"/reg/{id}", headers=headers_post, json=json)
-            client.delete(f"/reg/{id2}", headers=get_headers(token2))
+            json_data = {"referrer": f"{id2}"}
+            client.patch(f"https://api.cloudflareclient.com/v0a2223/reg/{id}", headers=headers_post, json=json_data, timeout=35)
+            client.delete(f"https://api.cloudflareclient.com/v0a2223/reg/{id2}", headers=get_headers(token2), timeout=35)
 
             key = random.choice(keys)
 
-            json = {"license": f"{key}"}
-            client.put(f"/reg/{id}/account", headers=headers_post, json=json)
+            json_data = {"license": f"{key}"}
+            client.put(f"https://api.cloudflareclient.com/v0a2223/reg/{id}/account", headers=headers_post, json=json_data, timeout=35)
 
-            json = {"license": f"{klych}"}
-            client.put(f"/reg/{id}/account", headers=headers_post, json=json)
+            json_data = {"license": f"{klych}"}
+            client.put(f"https://api.cloudflareclient.com/v0a2223/reg/{id}/account", headers=headers_post, json=json_data, timeout=35)
 
-            r = client.get(f"/reg/{id}/account", headers=get_headers(token))
+            r = client.get(f"https://api.cloudflareclient.com/v0a2223/reg/{id}/account", headers=get_headers(token), timeout=35)
             account_data = r.json()
             req_data = account_data["referral_count"]
             gened_key = account_data["license"]
 
-            client.delete(f"/reg/{id}", headers=get_headers(token))
+            client.delete(f"https://api.cloudflareclient.com/v0a2223/reg/{id}", headers=get_headers(token), timeout=35)
 
             if int(req_data) >= 12_000_000:
                 print(f"[!] キー発見！ -> {gened_key} : {req_data}")
@@ -68,9 +69,6 @@ def generate(diff, today = None):
                     f.write(f"{gened_key}\n")
             else:
                 print(f"{gened_key} : {req_data}")
-
-            # if (generated_keys + 1) % 1 == 0:
-            #     time.sleep(7)
 
     except Exception as e:
         print(f"エラー：{e}")

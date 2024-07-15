@@ -63,7 +63,7 @@ if __name__ == "__main__":
         keys = [key for key in f.read().split()]
 
     gen_keys = int(input("生成する数："))
-    which = input("Keys.txt以外に保存しますか？(yes/no)：")
+    which = input("Keys.txt以外に保存しますか？(yes/no): ")
 
     if which == "yes":
         today = datetime.date.today()

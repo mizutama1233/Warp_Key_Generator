@@ -1,18 +1,22 @@
 from concurrent.futures import ThreadPoolExecutor
 import random, time, datetime
 import requests
-tpe = ThreadPoolExecutor(max_workers=10)
+tpe = ThreadPoolExecutor(max_workers=25)
+count = 0
 
 def generate(diff, today=None):
-    print(f"[!] 生成中")
+    global count
+    count += 1
+    print(f"\r[!] 生成中: {count}", end="")
     while True:
         try:
             headers = {
                 "CF-Client-Version": "a-6.11-2223",
                 "Host": "api.cloudflareclient.com",
-                "Connection": "Keep-Alive",
+                "connection": "Keep-Alive",
                 "Accept-Encoding": "gzip",
-                "User-Agent": "okhttp/3.12.1",
+                "x-cache-set": "false",
+                "x-envoy-upstream-service-time": "0",
             }
             key = random.choice(keys)
 
@@ -20,7 +24,7 @@ def generate(diff, today=None):
                 client.headers.update(headers)
                 r = client.post("https://api.cloudflareclient.com/v0a2223/reg", timeout=35)
                 response_data = r.json()
-                id = response_data["id"]
+                r_id = response_data["id"]
                 token = response_data["token"]
 
                 headers_post = {
@@ -29,17 +33,17 @@ def generate(diff, today=None):
                 }
 
                 json_data = {"license": f"{key}"}
-                client.put(f"https://api.cloudflareclient.com/v0a2223/reg/{id}/account", headers=headers_post, json=json_data, timeout=35)
+                client.put(f"https://api.cloudflareclient.com/v0a2223/reg/{r_id}/account", headers=headers_post, json=json_data, timeout=35)
 
-                r = client.get(f"https://api.cloudflareclient.com/v0a2223/reg/{id}/account", headers=headers_post, timeout=35)
+                r = client.get(f"https://api.cloudflareclient.com/v0a2223/reg/{r_id}/account", headers=headers_post, timeout=35)
                 account_data = r.json()
                 req_data = account_data["referral_count"]
                 gened_key = account_data["license"]
 
-                client.delete(f"https://api.cloudflareclient.com/v0a2223/reg/{id}", headers=headers_post, timeout=35)
+                client.delete(f"https://api.cloudflareclient.com/v0a2223/reg/{r_id}", headers=headers_post, timeout=35)
 
                 if int(req_data) >= 12_000_000:
-                    print(f"[!] キー発見！ -> {gened_key} : {req_data}")
+                    print(f"\n[!] {gened_key} : {req_data}", end="")
                     if diff == "yes":
                         with open(f'./gen/{today}.txt', 'a') as f:
                             f.write(f"{gened_key} - {req_data} GB\n")
@@ -57,20 +61,21 @@ def generate(diff, today=None):
                 time.sleep(65)
             else:
                 print(f"エラー：{e}")
+                break
 
 if __name__ == "__main__":
     with open("積み立てwarp.txt", "r") as f:
         keys = [key for key in f.read().split()]
 
-    gen_keys = int(input("生成する数："))
-    which = input("Keys.txt以外に保存しますか？(yes/no): ")
+    gen_keys = input("生成する数：")
+    which = input("別ファイルに保存しますか？(yes/no)：")
 
     if which == "yes":
         today = datetime.date.today()
-        for i in range(gen_keys):
+        for i in range(int(gen_keys)):
             tpe.submit(generate, "yes", today)
     elif which == "no":
-        for i in range(gen_keys):
+        for i in range(int(gen_keys)):
             tpe.submit(generate, "no")
 
     tpe.shutdown()

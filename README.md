@@ -4,8 +4,6 @@ Warp+ Key Generator. 1.92EB data (1923837108 GB)
 
 普通はKeys.txtに追加されます。"積み立て~~"は絶対消さないでくださいw
 
-# サンプル
-<video controls src="https://github.com/mizutama1233/Warp_Key_Generator/main/sample.mp4" muted="true"></video>
 
 # 使い方
 1. Pythonをインストール

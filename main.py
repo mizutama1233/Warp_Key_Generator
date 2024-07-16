@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 import random, time, datetime
 import requests
-tpe = ThreadPoolExecutor(max_workers=25)
+tpe = ThreadPoolExecutor(max_workers=30)
 count = 0
 
 def generate(diff, today=None):
@@ -56,12 +56,8 @@ def generate(diff, today=None):
                     print(f"{gened_key} : {req_data}")
             break
         except Exception as e:
-            if str(e) == "Expecting value: line 1 column 1 (char 0)":
-                print("429 Too Many Requests（retry）")
-                time.sleep(65)
-            else:
-                print(f"エラー：{e}")
-                break
+            print(f"\nエラー：{e}, {r.text}")
+            break
 
 if __name__ == "__main__":
     with open("積み立てwarp.txt", "r") as f:

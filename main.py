@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 import random, time, datetime
 import requests
-tpe = ThreadPoolExecutor(max_workers=30)
+tpe = ThreadPoolExecutor(max_workers=25)
 count = 0
 
 def generate(diff, today=None):
